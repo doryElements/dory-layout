@@ -1,14 +1,79 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
+<link rel="import" href="../app-layout/app-layout.html">
+
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+
 <dom-module id="dory-layout">
   <template>
     <style>
       :host {
         display: block;
+        --logo-background-color : grey;
+        --background-color : lightgrey;
+        --sidebar-background-color : lightblue;
+        --toolbar-height : 122px;
       }
+
+      .title{
+        text-align : center;
+      }
+
+      .logo{
+        padding: 10px;
+        text-align: center;
+        background-color: var(--logo-background-color);
+      }
+
+      app-drawer {
+        --app-drawer-content-container: {
+          background-color: var(--sidebar-background-color);
+        }
+      }
+      app-toolbar {
+        height:var(--toolbar-height);
+      }
+
+      .content{
+        background-color: var(--background-color);
+        width : 100%;
+        height : 100%;
+        position : absolute;
+      }
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;
+      }
+
     </style>
-    <h2>Hello [[prop1]]!</h2>
+    <app-drawer-layout fullbleed>
+      <app-drawer opened slot="drawer" class="sidebar">
+        <div class="logo">
+          <img src="../imgs/agrica-white.png" alt="Agrica">
+        </div>
+        <div class="sidebar">
+          <slot name="sidebar"></slot>
+        </div>
+      </app-drawer>
+
+      <app-header-layout>
+        <app-header reveals fixed>
+          <app-toolbar>
+            <paper-icon-button drawer-toggle icon="menu"></paper-icon-button>
+            <div class="title" main-title>
+              <slot name="title"></slot>
+            </div>
+          </app-toolbar>
+        </app-header>
+      </app-header-layout>
+
+      <div class="content">
+        <slot name="content"></slot>
+      </div>
+    </app-drawer-layout>
   </template>
+
+
 
   <script>
     /**
@@ -23,10 +88,7 @@
       static get is() { return 'dory-layout'; }
       static get properties() {
         return {
-          prop1: {
-            type: String,
-            value: 'dory-layout'
-          }
+
         };
       }
     }
