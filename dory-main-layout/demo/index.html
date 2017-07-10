@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>dory-layout demo</title>
+
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../dory-main-layout.html">
+
+    <custom-style>
+        <style is="custom-style" include="demo-pages-shared-styles">
+            dory-layout{
+                --toolbar-height : 100px;
+            }
+        </style>
+    </custom-style>
+</head>
+<body>
+    <div class="vertical-section-container centered">
+        <dom-bind id="demo">
+            <template>
+                <dory-main-layout>
+                    <div slot="top-sidebar">
+                        <h1>Agrica</h1>
+                    </div>
+
+                    <div slot="sidebar">
+
+                    </div>
+                    <div slot="content">
+                        <h2>Content</h2>
+                    </div>
+                </dory-main-layout>
+            </template>
+        </dom-bind>
+    </div>
+</body>
+</html>
