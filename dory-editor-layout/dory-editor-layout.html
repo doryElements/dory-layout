@@ -1,0 +1,39 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="dory-editor-layout">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <h2>Hello [[prop1]]!</h2>
+    </template>
+
+    <script>
+        /**
+         * `dory-editor-layout`
+         *
+         *
+         * @customElement
+         * @polymer
+         * @demo demo/index.html
+         */
+        class DoryEditorLayout extends Polymer.Element {
+            static get is() {
+                return 'dory-editor-layout';
+            }
+
+            static get properties() {
+                return {
+                    prop1: {
+                        type: String,
+                        value: 'dory-editor-layout'
+                    }
+                };
+            }
+        }
+
+        window.customElements.define(DoryEditorLayout.is, DoryEditorLayout);
+    </script>
+</dom-module>
