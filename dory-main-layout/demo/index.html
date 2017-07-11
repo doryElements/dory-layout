@@ -14,8 +14,8 @@
 
     <custom-style>
         <style is="custom-style" include="demo-pages-shared-styles">
-            dory-layout{
-                --toolbar-height : 100px;
+            dory-main-layout{
+                --toolbar-height : 80px;
             }
         </style>
     </custom-style>
@@ -24,13 +24,13 @@
     <div class="vertical-section-container centered">
         <dom-bind id="demo">
             <template>
-                <dory-main-layout>
+                <dory-main-layout search>
                     <div slot="top-sidebar">
-                        <h1>Agrica</h1>
+                        <h1>Logo</h1>
                     </div>
 
                     <div slot="sidebar">
-
+                        <h2>Sidebar</h2>
                     </div>
                     <div slot="content">
                         <h2>Content</h2>

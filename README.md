@@ -2,7 +2,7 @@
 
 ## Example
 ```html
-<dory-layout>
+<dory-main-layout>
     <div slot="top-sidebar">
         <h1>Your Company Name</h1>
     </div>
@@ -12,7 +12,7 @@
     <div slot="content">
         Your content
     </div>
-</dory-layout>
+</dory-main-layout>
 ```
 
 ## Styling
