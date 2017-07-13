@@ -1,0 +1,107 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="dory-request">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+    </template>
+
+    <script>
+        /**
+         * `dory-request`
+         *
+         *
+         * @customElement
+         * @polymer
+         * @demo demo/index.html
+         */
+        class DoryRequest extends Polymer.Element {
+            static get is() {
+                return 'dory-request';
+            }
+
+            static get properties() {
+                return {
+                    url: {
+                        type: String,
+                    },
+                    data: {
+                        type: Array
+                    },
+                    method : {
+                        type : String,
+                        value : 'post'
+                    },
+                    from : {
+                        type : Number,
+                        value : 0
+                    },
+                    size : {
+                        type : Number,
+                        value : 10
+                    },
+                    searchFields : {
+                        type : Array
+                    }
+                };
+            }
+
+            createRequest(searchText,searchFields){
+                let myHeaders = new Headers();
+                myHeaders.append('Content-Type','application/json');
+
+                let request = {
+                    method : this.method,
+                    headers : myHeaders,
+                    mode : 'cors',
+                    body : JSON.stringify( {
+                        'size' : this.size,
+                        'from' : this.from
+                    })
+                };
+
+                if(searchText){
+                    request.body=JSON.stringify({
+                        size : this.size,
+                        query:{
+                            simple_query_string:{
+                                fields:searchFields,
+                                query: `${searchText}*`
+                            }
+                        }
+                    });
+                }
+
+                this._handleRequest(request);
+            }
+
+            _handleRequest(request){
+                fetch(this.url,request)
+                    .then(
+                        function(response){
+                            if(response.status !== 200){
+                                console.log('Fetch encountered an error : Error code ',response.status);
+                                return;
+                            }
+                            response.json().then(function(data){
+                                console.log('fetch successful : ',data);
+                            });
+                        }
+                    )
+                    .catch(function(err){
+                        console.log('Fetch error : ',err);
+                    })
+            }
+
+            loadMoreData(){
+                this.from += this.size;
+                this.createRequest();
+            }
+        }
+
+        window.customElements.define(DoryRequest.is, DoryRequest);
+    </script>
+</dom-module>

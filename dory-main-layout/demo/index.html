@@ -25,7 +25,7 @@
     <div class="vertical-section-container centered">
         <dom-bind id="demo">
             <template>
-                <dory-main-layout search>
+                <dory-main-layout search url="http://localhost:9200/sam/sam/_search?">
                     <div slot="top-sidebar">
                         <h1>Logo</h1>
                     </div>
@@ -34,8 +34,7 @@
                         <h2>Sidebar</h2>
                     </div>
                     <div slot="content">
-                        <h2>Content</h2>
-                        <sample-content size="10"></sample-content>
+                        <sample-content size="4" slot="list"></sample-content>
                     </div>
                 </dory-main-layout>
             </template>

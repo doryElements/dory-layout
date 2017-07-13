@@ -6,6 +6,9 @@
 <link rel="import" href="../../paper-input/paper-input.html">
 <link rel="import" href="../../iron-icons/iron-icons.html">
 <link rel="import" href="../../iron-pages/iron-pages.html">
+<link rel="import" href="../../iron-scroll-threshold/iron-scroll-threshold.html">
+
+<link rel="import" href="../dory-request.html">
 
 <link rel="import" href="../../polymer/lib/utils/debounce.html">
 
@@ -17,6 +20,7 @@
                 --top-sidebar-color : grey;
                 --background-color : lightgrey;
                 --sidebar-background-color : lightblue;
+                --search-border-color : blue;
                 --title-color : white;
                 --toolbar-height : 122px;
             }
@@ -79,11 +83,15 @@
             }
 
             paper-input[focused]{
-                border  : solid 1px blue;
+                border  : solid 1px var(--search-border-color);
             }
 
             app-drawer-layout:not([narrow]) [drawer-toggle] {
                 display: none;
+            }
+
+            #threshold{
+                height : calc(100%;
             }
 
         </style>
@@ -107,7 +115,7 @@
                                 <slot name="title"></slot>
                             </div>
                             <template is="dom-if" if="[[search]]">
-                                <paper-icon-button id="search" icon="search" on-tap="_toggleSearchBar" class="big-icon"></paper-icon-button>
+                                <paper-icon-button icon="search" on-tap="_toggleSearchBar" class="big-icon"></paper-icon-button>
                             </template>
                         </app-toolbar>
 
@@ -123,7 +131,11 @@
             </app-header-layout>
 
             <div class="content">
-                <slot name="content"></slot>
+                <slot name="content" id="content"></slot>
+                <dory-request id="request" url="[[url]]" data="{{listData}}" searchFields=[[searchFields]]></dory-request>
+                <iron-scroll-threshold on-lower-threshold="_loadMoreData" id="threshold">
+                    <slot name="list" scroll-target="threshold"></slot>
+                </iron-scroll-threshold>
             </div>
         </app-drawer-layout>
     </template>
@@ -151,38 +163,68 @@
                         type : Boolean,
                         value : false
                     },
+
                     /**
-                     *
+                     * {string} value of the input inside the search-bar
                      */
                     searchText: {
                         type : String,
                         observer : '_searchTextChanged',
                         notify: true
                     },
+
+                    /**
+                     * {string} search value, taking into account the delay applied to searchText
+                     */
                     searchValue : {
                         type : String
                     },
+
                     /**
-                     *
+                     * {Array} of fields used to search an item in the DB
+                     * REQUIRED if search is enabled
                      */
-                    searchLabel:{
-                        type : String
+                    searchFields:{
+                        type:Array
                     },
+
                     /**
-                     *
+                     * {string} value to be placed as a placeholder in the search input
                      */
                     placeholder : {
                         type : String
                     },
+
+                    /**
+                     *  {number} delay Time to wait before validate the input string
+                     */
+                    delay: {
+                        type: Number,
+                        value: 500
+                    },
+
+                    /**
+                     * {string} url used to connect to the DB
+                     */
+                    url : {
+                        type : String
+                    },
+
                     tabSelected : {
                         type : Number,
                         value : 0
-                    },
-                    searchFocus : {
-                        type : Boolean,
-                        value : false
                     }
                 };
+            }
+
+            _searchTextChanged(newValue) {
+                this._debouncer = Polymer.Debouncer.debounce(
+                    this._debouncer,
+                    Polymer.Async.timeOut.after(this.delay),
+                    () => {
+                        this.$.request.createRequest(this.searchText,this.searchFields);
+                    }
+                );
             }
 
             _toggleSearchBar(){
@@ -195,20 +237,11 @@
                 }
             }
 
-            _searchTextChanged(newValue) {
-                this._debouncer = Polymer.Debouncer.debounce(
-                    this._debouncer,
-                    Polymer.Async.timeOut.after(this.delay),
-                    () => {
-                        this.search();
-                    });
-            }
 
-            search(){
-                this.searchValue = this.searchText;
-                this.dispatchEvent(new CustomEvent('search', {detail: {searchText: this.searchText}}));
-                console.log('Search event dispatched : ',this.searchText);
-            }
+//            _loadMoreData(){
+//                console.log('loading additional data');
+//                this.$.threshold.clearTriggers();
+//            }
         }
 
         window.customElements.define(DoryMainLayout.is, DoryMainLayout);
