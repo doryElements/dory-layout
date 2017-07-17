@@ -120,7 +120,7 @@
                         </app-toolbar>
 
                         <app-toolbar>
-                            <paper-input id="search" class="search-bar" value="{{searchText}}" placeholder = "[[placeholder]]">
+                            <paper-input id="search" class="search-bar" value="{{searchText}}" placeholder="[[placeholder]]" on-blur="_toggleSearchBar">
                                 <iron-icon slot="prefix" icon="search" class="big-icon"></iron-icon>
                                 <paper-icon-button slot="suffix" icon="clear" class="big-icon" on-tap="_toggleSearchBar"></paper-icon-button>
                             </paper-input>
