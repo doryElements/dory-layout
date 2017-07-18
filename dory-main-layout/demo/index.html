@@ -1,31 +1,37 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>dory-layout demo</title>
+        <title>dory-layout demo</title>
 
-    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+        <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="../../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../dory-main-layout.html">
-    <link rel="import" href="sample-content.html">
+        <link rel="import" href="../../../polymer/lib/elements/dom-repeat.html">
 
-    <custom-style>
-        <style is="custom-style" include="demo-pages-shared-styles">
-            dory-main-layout{
-                --toolbar-height : 80px;
-            }
-        </style>
-    </custom-style>
-</head>
-<body>
-    <div class="vertical-section-container centered">
-        <dom-bind id="demo">
+        <link rel="import" href="../../../iron-demo-helpers/demo-pages-shared-styles.html">
+        <link rel="import" href="../../../iron-demo-helpers/demo-snippet.html">
+        <link rel="import" href="../../../iron-list/iron-list.html">
+        <link rel="import" href="../dory-main-layout.html">
+        <link rel="import" href="sample-content.html">
+
+        <custom-style>
+            <style is="custom-style" include="demo-pages-shared-styles">
+                dory-main-layout{
+                    --toolbar-height : 80px;
+                }
+            </style>
+        </custom-style>
+    </head>
+
+    <body>
+        <dom-bind>
             <template>
-                <dory-main-layout search url="http://localhost:9200/sam/sam/_search?">
+                <dory-main-layout search
+                                  url="http://localhost:9200/sam/sam/_search?"
+                                  list-data="{{data}}">
+
                     <div slot="top-sidebar">
                         <h1>Logo</h1>
                     </div>
@@ -33,12 +39,17 @@
                     <div slot="sidebar">
                         <h2>Sidebar</h2>
                     </div>
-                    <div slot="content">
-                        <sample-content size="4" slot="list"></sample-content>
+
+                    <div slot="list">
+                        <template is="dom-repeat" items="[[data]]">
+                            <div style="box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2) ; padding: 10px; margin: 10px; border-radius: 5px; background-color: #fff; color: #757575;">
+                                <h2>[[item.app]]</h2>
+                                <h4>[[item.description]]</h4>
+                            </div>
+                        </template>
                     </div>
                 </dory-main-layout>
             </template>
         </dom-bind>
-    </div>
-</body>
+    </body>
 </html>

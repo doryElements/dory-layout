@@ -51,8 +51,7 @@
             .content{
                 background-color: var(--background-color);
                 width : 100%;
-                height : calc(100% - var(--toolbar-height));
-                position : absolute;
+                height : calc(100vh - var(--toolbar-height));
             }
 
             .big-icon{
@@ -94,6 +93,11 @@
                 height : calc(100%;
             }
 
+            iron-scroll-threshold {
+                height: 100%;
+                overflow: auto;
+            }
+
         </style>
         <app-drawer-layout fullbleed>
             <app-drawer opened slot="drawer" class="sidebar">
@@ -132,9 +136,11 @@
 
             <div class="content">
                 <slot name="content" id="content"></slot>
+
                 <dory-request id="request" url="[[url]]" data="{{listData}}" searchFields=[[searchFields]]></dory-request>
-                <iron-scroll-threshold on-lower-threshold="_loadMoreData" id="threshold">
-                    <slot name="list" scroll-target="threshold"></slot>
+
+                <iron-scroll-threshold on-lower-threshold="loadMoreData" id="threshold">
+                    <slot name="list"></slot>
                 </iron-scroll-threshold>
             </div>
         </app-drawer-layout>
@@ -210,11 +216,24 @@
                         type : String
                     },
 
+                    /**
+                     * {Array} of results returned by dory-request
+                     */
+                    listData : {
+                        type : Array,
+                        notify : true,
+                        observer : '_handleDataChange'
+                    },
+
                     tabSelected : {
                         type : Number,
                         value : 0
                     }
                 };
+            }
+
+            _handleDataChange(){
+                console.log('Data  : ', this.listData);
             }
 
             _searchTextChanged(newValue) {
@@ -237,11 +256,11 @@
                 }
             }
 
-
-//            _loadMoreData(){
-//                console.log('loading additional data');
-//                this.$.threshold.clearTriggers();
-//            }
+            loadMoreData(){
+                console.log('loading additional data');
+                this.$.request.loadMoreData();
+                this.$.threshold.clearTriggers();
+            }
         }
 
         window.customElements.define(DoryMainLayout.is, DoryMainLayout);

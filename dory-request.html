@@ -29,7 +29,11 @@
                         type: String,
                     },
                     data: {
-                        type: Array
+                        type: Array,
+                        notify : true,
+                        value: () => {
+                            return [];
+                        }
                     },
                     method : {
                         type : String,
@@ -41,12 +45,17 @@
                     },
                     size : {
                         type : Number,
-                        value : 10
+                        value : 8
                     },
                     searchFields : {
                         type : Array
                     }
                 };
+            }
+
+            ready(){
+                super.ready();
+                this.createRequest();
             }
 
             createRequest(searchText,searchFields){
@@ -80,21 +89,38 @@
 
             _handleRequest(request){
                 fetch(this.url,request)
-                    .then(
-                        function(response){
+                    .then(response =>{
                             if(response.status !== 200){
-                                console.log('Fetch encountered an error : Error code ',response.status);
+                                console.error('Fetch encountered an error : Error code ',response.status);
                                 return;
                             }
-                            response.json().then(function(data){
-                                console.log('fetch successful : ',data);
+                            response.json().then( (data) => {
+                                const result = data.hits.hits;
+                                const items = result.map(x => Object.assign( x._source, { id:x._id} ));
+                                this.data = [...this.data, ...items];
+                                return items;
                             });
                         }
                     )
                     .catch(function(err){
-                        console.log('Fetch error : ',err);
-                    })
+                        console.error('Fetch error : ',err);
+                    });
             }
+
+//            _handleResponse(e){
+//                new Promise( (resolve, error) => {
+//                    const response =  e.detail.response.hits;
+//                    const response = e.json().valueOf().hits;
+//                    console.log('Response : ',response);
+//                    const result = response.hits;
+//                    const total = response.total;
+//                    const items = result.map( x => Object.assign( x._source, { id:x._id} ));
+//                    resolve( [items, total] );
+//                }).then( ([items, total]) => {
+//                    this.data = [...this.data, ...items];
+//                    return [items, total];
+//                }).catch(function(err){console.error(err)});
+//            }
 
             loadMoreData(){
                 this.from += this.size;
