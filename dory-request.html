@@ -108,21 +108,6 @@
                     });
             }
 
-//            _handleResponse(e){
-//                new Promise( (resolve, error) => {
-//                    const response =  e.detail.response.hits;
-//                    const response = e.json().valueOf().hits;
-//                    console.log('Response : ',response);
-//                    const result = response.hits;
-//                    const total = response.total;
-//                    const items = result.map( x => Object.assign( x._source, { id:x._id} ));
-//                    resolve( [items, total] );
-//                }).then( ([items, total]) => {
-//                    this.data = [...this.data, ...items];
-//                    return [items, total];
-//                }).catch(function(err){console.error(err)});
-//            }
-
             loadMoreData(){
                 this.from += this.size;
                 this.createRequest();

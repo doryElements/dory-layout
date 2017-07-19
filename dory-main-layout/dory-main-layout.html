@@ -126,7 +126,7 @@
                         <app-toolbar>
                             <paper-input id="search" class="search-bar" value="{{searchText}}" placeholder="[[placeholder]]" on-blur="_toggleSearchBar">
                                 <iron-icon slot="prefix" icon="search" class="big-icon"></iron-icon>
-                                <paper-icon-button slot="suffix" icon="clear" class="big-icon" on-tap="_toggleSearchBar"></paper-icon-button>
+                                <paper-icon-button slot="suffix" icon="clear" class="big-icon" on-mousedown="_clearSearchBar"></paper-icon-button>
                             </paper-input>
                         </app-toolbar>
 
@@ -254,6 +254,12 @@
                 else{
                     this.tabSelected=0;
                 }
+            }
+
+            _clearSearchBar(){
+                console.log('Clearing search bar');
+                this.searchText = " ";
+                this._toggleSearchBar();
             }
 
             loadMoreData(){
