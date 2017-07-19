@@ -6,7 +6,6 @@
 <link rel="import" href="../../paper-input/paper-input.html">
 <link rel="import" href="../../iron-icons/iron-icons.html">
 <link rel="import" href="../../iron-pages/iron-pages.html">
-<link rel="import" href="../../iron-scroll-threshold/iron-scroll-threshold.html">
 
 <link rel="import" href="../dory-request.html">
 
@@ -52,6 +51,7 @@
                 background-color: var(--background-color);
                 width : 100%;
                 height : calc(100vh - var(--toolbar-height));
+                overflow : auto;
             }
 
             .big-icon{
@@ -88,16 +88,6 @@
             app-drawer-layout:not([narrow]) [drawer-toggle] {
                 display: none;
             }
-
-            #threshold{
-                height : calc(100%;
-            }
-
-            iron-scroll-threshold {
-                height: 100%;
-                overflow: auto;
-            }
-
         </style>
         <app-drawer-layout fullbleed>
             <app-drawer opened slot="drawer" class="sidebar">
@@ -134,14 +124,12 @@
                 </app-header>
             </app-header-layout>
 
-            <div class="content">
-                <slot name="content" id="content"></slot>
+            <div class="content" on-scroll="_handleContentScroll" id="content">
+                <slot name="content" ></slot>
 
                 <dory-request id="request" url="[[url]]" data="{{listData}}" searchFields=[[searchFields]]></dory-request>
 
-                <iron-scroll-threshold on-lower-threshold="loadMoreData" id="threshold">
-                    <slot name="list"></slot>
-                </iron-scroll-threshold>
+                <slot name="list"></slot>
             </div>
         </app-drawer-layout>
     </template>
@@ -221,8 +209,7 @@
                      */
                     listData : {
                         type : Array,
-                        notify : true,
-                        observer : '_handleDataChange'
+                        notify : true
                     },
 
                     tabSelected : {
@@ -230,10 +217,6 @@
                         value : 0
                     }
                 };
-            }
-
-            _handleDataChange(){
-                console.log('Data  : ', this.listData);
             }
 
             _searchTextChanged(newValue) {
@@ -244,6 +227,12 @@
                         this.$.request.createRequest(this.searchText,this.searchFields);
                     }
                 );
+            }
+
+            _handleContentScroll(){
+                if(this.$.content.offsetHeight + this.$.content.scrollTop >= this.$.content.scrollHeight){
+                    this.$.request.loadMoreData();
+                }
             }
 
             _toggleSearchBar(){
@@ -257,15 +246,7 @@
             }
 
             _clearSearchBar(){
-                console.log('Clearing search bar');
-                this.searchText = " ";
-                this._toggleSearchBar();
-            }
-
-            loadMoreData(){
-                console.log('loading additional data');
-                this.$.request.loadMoreData();
-                this.$.threshold.clearTriggers();
+                this.searchText = "";
             }
         }
 
