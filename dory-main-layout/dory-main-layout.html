@@ -247,6 +247,8 @@
 
             _clearSearchBar(){
                 this.searchText = "";
+                this.listData=[];
+                this.$.request.createRequest(this.searchText,this.searchFields);
             }
         }
 
