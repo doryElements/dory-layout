@@ -29,11 +29,11 @@
         <dom-bind>
             <template>
                 <dory-main-layout search
-                                  url="http://localhost:9200/sam/sam/_search?"
+                                  url="https://localhost:8181/api/sams/"
                                   list-data="{{data}}">
 
                     <div slot="top-sidebar">
-                        <h1>Logo</h1>
+                        <h2>Logo</h2>
                     </div>
 
                     <div slot="sidebar">
@@ -48,6 +48,7 @@
                             </div>
                         </template>
                     </div>
+
                 </dory-main-layout>
             </template>
         </dom-bind>

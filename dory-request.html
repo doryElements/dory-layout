@@ -37,7 +37,7 @@
                     },
                     method : {
                         type : String,
-                        value : 'post'
+                        value : 'get'
                     },
                     from : {
                         type : Number,
@@ -49,6 +49,10 @@
                     },
                     searchFields : {
                         type : Array
+                    },
+                    mode: {
+                        type : String,
+                        value : 'no-cors'
                     }
                 };
             }
@@ -58,6 +62,36 @@
                 this.createRequest();
             }
 
+//            createRequest(searchText,searchFields){
+//                let myHeaders = new Headers();
+//                myHeaders.append('Content-Type','application/json');
+//
+//                let request = {
+//                    method : this.method,
+//                    headers : myHeaders,
+//                    mode : 'cors',
+//                    body : JSON.stringify( {
+//                        'size' : this.size,
+//                        'from' : this.from
+//                    })
+//                };
+//
+//                if(searchText){
+//                    request.body=JSON.stringify({
+//                        size : this.size,
+//                        query:{
+//                            simple_query_string:{
+//                                fields:searchFields,
+//                                query: `${searchText}*`
+//                            }
+//                        }
+//                    });
+//                    this.data = [];
+//                }
+//
+//                this._handleRequest(request);
+//            }
+
             createRequest(searchText,searchFields){
                 let myHeaders = new Headers();
                 myHeaders.append('Content-Type','application/json');
@@ -65,25 +99,12 @@
                 let request = {
                     method : this.method,
                     headers : myHeaders,
-                    mode : 'cors',
-                    body : JSON.stringify( {
+                    mode : this.mode,
+                    query : JSON.stringify( {
                         'size' : this.size,
                         'from' : this.from
                     })
                 };
-
-                if(searchText){
-                    request.body=JSON.stringify({
-                        size : this.size,
-                        query:{
-                            simple_query_string:{
-                                fields:searchFields,
-                                query: `${searchText}*`
-                            }
-                        }
-                    });
-                    this.data = [];
-                }
 
                 this._handleRequest(request);
             }
