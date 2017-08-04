@@ -53,6 +53,10 @@
                     mode: {
                         type : String,
                         value : 'no-cors'
+                    },
+                    credentials : {
+                        type : String,
+                        value : "include"
                     }
                 };
             }
@@ -100,6 +104,7 @@
                     method : this.method,
                     headers : myHeaders,
                     mode : this.mode,
+                    credentials : this.credentials,
                     query : JSON.stringify( {
                         'size' : this.size,
                         'from' : this.from
