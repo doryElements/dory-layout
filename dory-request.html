@@ -45,7 +45,7 @@
                     },
                     size : {
                         type : Number,
-                        value : 10
+                        value : 15
                     },
                     searchFields : {
                         type : Array
@@ -106,12 +106,9 @@
                     headers : myHeaders,
                     mode : this.mode,
                     credentials : this.credentials,
-                    query : JSON.stringify( {
-                        'size' : this.size,
-                        'from' : this.from
-                    })
                 };
 
+                this.url = this.url+'?from='+this.from+"&size="+this.size;
                 console.log('Request : ' , request);
                 this._handleRequest(request);
             }
