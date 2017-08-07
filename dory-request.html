@@ -124,10 +124,11 @@
                                 return;
                             }
                             response.json().then( (data) => {
-                                const result = data.hits.hits;
-                                const items = result.map(x => Object.assign( x._source, { id:x._id} ));
+                                const result = data.hits;
+//                                const items = result.map(x => Object.assign( x._source, { id:x._id} ));
                                 this.data = [...this.data, ...items];
-                                return items;
+                                return result;
+//                                return items;
                             });
                         }
                     )

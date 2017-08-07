@@ -117,7 +117,9 @@
             <div class="content" on-scroll="_handleContentScroll" id="content">
                 <slot name="content" ></slot>
 
-                <dory-request id="request" url="[[url]]" data="{{listData}}" searchFields=[[searchFields]]></dory-request>
+                <template is="dom-if" if="[[search]]">
+                    <dory-request id="request" url="[[url]]" data="{{listData}}" searchFields=[[searchFields]]></dory-request>
+                </template>
 
                 <slot name="list"></slot>
             </div>
