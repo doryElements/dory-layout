@@ -216,14 +216,14 @@
                     this._debouncer,
                     Polymer.Async.timeOut.after(this.delay),
                     () => {
-                        this.$.request.createRequest(this.searchText,this.searchFields);
+                        this.shadowRoot.querySelector('#request').createRequest(this.searchText,this.searchFields);
                     }
                 );
             }
 
             _handleContentScroll(){
                 if(this.$.content.offsetHeight + this.$.content.scrollTop >= this.$.content.scrollHeight){
-                    this.$.request.loadMoreData();
+                    this.shadowRoot.querySelector('#request').loadMoreData();
                 }
             }
 
@@ -240,7 +240,7 @@
             _clearSearchBar(){
                 this.searchText = "";
                 this.listData=[];
-                this.$.request.createRequest(this.searchText,this.searchFields);
+                this.shadowRoot.querySelector('#request').createRequest(this.searchText,this.searchFields);
             }
         }
 
