@@ -45,7 +45,7 @@
                     },
                     size : {
                         type : Number,
-                        value : 15
+                        value : 10
                     },
                     searchFields : {
                         type : Array
@@ -64,6 +64,7 @@
             ready(){
                 super.ready();
                 this.createRequest();
+                this.loadMoreData();
             }
 
 //            createRequest(searchText,searchFields){
@@ -108,12 +109,15 @@
                     credentials : this.credentials,
                 };
 
-                let requestUrl = this.url+'?from='+this.from+"&size="+this.size;
+                let requestUrl = this.url;
 
                 if(searchText){
                     requestUrl=requestUrl+"&app="+searchText;
+                    this.from = 0;
                     this.data=[];
                 }
+
+                requestUrl = requestUrl+'?from='+this.from+"&size="+this.size;
 
                 this._handleRequest(requestUrl,request);
             }
