@@ -167,14 +167,6 @@
                     },
 
                     /**
-                     * {Array} of fields used to search an item in the DB
-                     * REQUIRED if search is enabled
-                     */
-                    searchFields:{
-                        type:Array
-                    },
-
-                    /**
                      * {string} value to be placed as a placeholder in the search input
                      */
                     placeholder : {
@@ -216,7 +208,7 @@
                     this._debouncer,
                     Polymer.Async.timeOut.after(this.delay),
                     () => {
-                        this.shadowRoot.querySelector('#request').createRequest(this.searchText,this.searchFields);
+                        this.shadowRoot.querySelector('#request').createRequest(this.searchText);
                     }
                 );
             }
@@ -240,7 +232,7 @@
             _clearSearchBar(){
                 this.searchText = "";
                 this.listData=[];
-                this.shadowRoot.querySelector('#request').createRequest(this.searchText,this.searchFields);
+                this.shadowRoot.querySelector('#request').createRequest(this.searchText);
             }
         }
 

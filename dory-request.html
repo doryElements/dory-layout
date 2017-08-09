@@ -96,7 +96,7 @@
 //                this._handleRequest(request);
 //            }
 
-            createRequest(searchText,searchFields){
+            createRequest(searchText){
                 let myHeaders = new Headers({
                     'Content-Type':'application/json'
                 });
@@ -108,13 +108,18 @@
                     credentials : this.credentials,
                 };
 
-                this.url = this.url+'?from='+this.from+"&size="+this.size;
-                console.log('Request : ' , request);
-                this._handleRequest(request);
+                let requestUrl = this.url+'?from='+this.from+"&size="+this.size;
+
+                if(searchText){
+                    requestUrl=requestUrl+"&app="+searchText;
+                    this.data=[];
+                }
+
+                this._handleRequest(requestUrl,request);
             }
 
-            _handleRequest(request){
-                fetch(this.url,request)
+            _handleRequest(url,request){
+                fetch(url,request)
                     .then(response =>{
                             if(response.status !== 200){
                                 console.error('Fetch encountered an error : Error code ',response.status);
@@ -122,10 +127,8 @@
                             }
                             response.json().then( (data) => {
                                 const result = data.hits;
-//                                const items = result.map(x => Object.assign( x._source, { id:x._id} ));
                                 this.data = [...this.data, ...result];
                                 return result;
-//                                return items;
                             });
                         }
                     )
