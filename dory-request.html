@@ -109,15 +109,15 @@
                     credentials : this.credentials,
                 };
 
-                let requestUrl = this.url;
+                let requestUrl = this.url+'?';
 
                 if(searchText){
-                    requestUrl=requestUrl+"&app="+searchText;
+                    requestUrl=requestUrl+"app="+searchText+'&';
                     this.from = 0;
                     this.data=[];
                 }
 
-                requestUrl = requestUrl+'?from='+this.from+"&size="+this.size;
+                requestUrl = requestUrl+'from='+this.from+"&size="+this.size;
 
                 this._handleRequest(requestUrl,request);
             }
