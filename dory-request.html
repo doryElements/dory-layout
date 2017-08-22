@@ -119,7 +119,7 @@
 
                 requestUrl = requestUrl + 'from=' + this.from + "&size=" + this.size;
 
-                this._handleRequest(requestUrl, request);
+                return this._handleRequest(requestUrl, request);
             }
 
             _isResponseJson(response) {
@@ -128,7 +128,7 @@
             };
 
             _handleRequest(url, request) {
-                fetch(url, request)
+                return fetch(url, request)
                     .then(this._checkResponseStatus.bind(this))
                     .then(response => {
                         return response.json().then((data) => {
