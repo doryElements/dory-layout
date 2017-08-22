@@ -30,38 +30,38 @@
                     },
                     data: {
                         type: Array,
-                        notify : true,
+                        notify: true,
                         value: () => {
                             return [];
                         }
                     },
-                    method : {
-                        type : String,
-                        value : 'GET'
+                    method: {
+                        type: String,
+                        value: 'GET'
                     },
-                    from : {
-                        type : Number,
-                        value : 0
+                    from: {
+                        type: Number,
+                        value: 0
                     },
-                    size : {
-                        type : Number,
-                        value : 10
+                    size: {
+                        type: Number,
+                        value: 10
                     },
-                    searchFields : {
-                        type : Array
+                    searchFields: {
+                        type: Array
                     },
                     mode: {
-                        type : String,
-                        value : 'no-cors'
+                        type: String,
+                        value: 'no-cors'
                     },
-                    credentials : {
-                        type : String,
-                        value : "include"
+                    credentials: {
+                        type: String,
+                        value: "include"
                     }
                 };
             }
 
-            ready(){
+            ready() {
                 super.ready();
                 this.createRequest();
             }
@@ -96,51 +96,92 @@
 //                this._handleRequest(request);
 //            }
 
-            createRequest(searchText){
+            createRequest(searchText) {
                 let myHeaders = new Headers({
-                    'Content-Type':'application/json'
+                    'Content-Type': 'application/json'
                 });
 
                 let request = {
-                    method : this.method,
-                    headers : myHeaders,
-                    mode : this.mode,
-                    credentials : this.credentials,
+                    method: this.method,
+                    headers: myHeaders,
+                    mode: this.mode,
+                    credentials: this.credentials,
                 };
 
-                let requestUrl = this.url+'?';
+                let requestUrl = this.url + '?';
 
-                if(searchText){
-                    requestUrl=requestUrl+"app="+searchText+'&';
+                if (searchText) {
+                    requestUrl = requestUrl + "app=" + searchText + '&';
                     this.from = 0;
-                    this.data=[];
+                    this.data = [];
                 }
 
-                requestUrl = requestUrl+'from='+this.from+"&size="+this.size;
+                requestUrl = requestUrl + 'from=' + this.from + "&size=" + this.size;
 
-                this._handleRequest(requestUrl,request);
+                return this._handleRequest(requestUrl, request);
             }
 
-            _handleRequest(url,request){
-                fetch(url,request)
-                    .then(response =>{
-                            if(response.status !== 200){
-                                console.error('Fetch encountered an error : Error code ',response.status);
-                                return;
-                            }
-                            response.json().then( (data) => {
-                                const result = data.hits;
-                                this.data = [...this.data, ...result];
-                                return result;
-                            });
-                        }
-                    )
-                    .catch(function(err){
-                        console.error('Fetch error : ',err);
-                    });
+            _isResponseJson(response) {
+                const contentType = response.headers.get('content-type');
+                return (contentType && contentType.indexOf('application/json') !== -1)
+            };
+
+            _handleRequest(url, request) {
+                return fetch(url, request)
+                    .then(this._checkResponseStatus.bind(this))
+                    .then(response => {
+                        return response.json().then((data) => {
+                            const result = data.hits;
+                            this.data = [...this.data, ...result];
+                            return result;
+                        });
+                    }).catch(this._handleErrorRetrieve.bind(this));
             }
 
-            loadMoreData(){
+            _checkResponseStatus(response) {
+                if (!response.ok) {
+                    const error = new Error(response.status + ' (' + response.statusText + ')');
+                    error.status = response.status;
+                    error.statusText = response.statusText;
+                    // Manage
+                    if (this._isResponseJson(response)) {
+                        return response.json().then(function (json) {
+                            error.responseJson = json;
+                            error.responseText = JSON.stringify(json);
+                            return Promise.reject(error);
+                        });
+                    } else {
+                        return response.text().then(function (text) {
+                            error.responseText = text;
+                            return Promise.reject(error);
+                        });
+                    }
+
+
+                }
+                return response;
+            };
+
+            _handleErrorRetrieve(error) {
+                this._fireErrorRetrieve(error);
+                return error;
+            }
+
+            /**
+             * Fired error when a resource are loaded.
+             *
+             * @event dory-request-error
+             */
+            _fireErrorRetrieve(error) {
+                this.dispatchEvent(new CustomEvent('dory-request-error', {
+                    detail: error,
+                    bubbles: true,
+                    composed: true
+                }));
+                return error;
+            };
+
+            loadMoreData() {
                 this.from += this.size;
                 this.createRequest();
             }
