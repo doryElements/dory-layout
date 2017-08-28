@@ -47,6 +47,10 @@
                         type: Number,
                         value: 10
                     },
+                    total: {
+                        type: Number,
+                        notify: true
+                    },
                     searchFields: {
                         type: Array
                     },
@@ -65,36 +69,6 @@
                 super.ready();
                 this.createRequest();
             }
-
-//            createRequest(searchText,searchFields){
-//                let myHeaders = new Headers();
-//                myHeaders.append('Content-Type','application/json');
-//
-//                let request = {
-//                    method : this.method,
-//                    headers : myHeaders,
-//                    mode : 'cors',
-//                    body : JSON.stringify( {
-//                        'size' : this.size,
-//                        'from' : this.from
-//                    })
-//                };
-//
-//                if(searchText){
-//                    request.body=JSON.stringify({
-//                        size : this.size,
-//                        query:{
-//                            simple_query_string:{
-//                                fields:searchFields,
-//                                query: `${searchText}*`
-//                            }
-//                        }
-//                    });
-//                    this.data = [];
-//                }
-//
-//                this._handleRequest(request);
-//            }
 
             createRequest(searchText) {
                 let myHeaders = new Headers({
@@ -133,6 +107,7 @@
                         return response.json().then((data) => {
                             const result = data.hits;
                             this.data = [...this.data, ...result];
+                            this.total = data.total;
                             return result;
                         });
                     }).catch(this._handleErrorRetrieve.bind(this));
