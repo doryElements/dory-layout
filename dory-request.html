@@ -160,6 +160,11 @@
                 this.from += this.size;
                 this.createRequest();
             }
+
+            refresh() {
+                this.data = [];
+                this.from = 0;
+            }
         }
 
         window.customElements.define(DoryRequest.is, DoryRequest);
